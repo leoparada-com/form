@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Suma de valores</title>
+</head>
+<body>
+	<h1>Suma de valores</h1>
+	<form id="formulario" method="post" action="{{ url_for('recibe_datos') }}">
+		<label for="valor_a">Valor a:</label>
+		<input type="number" name="valor_a" id="valor_a"><br><br>
+		<label for="valor_b">Valor b:</label>
+		<input type="number" name="valor_b" id="valor_b"><br><br>
+		<button type="submit" id="submit-btn">Calcular suma</button>
+	</form>
+	<div id="respuesta"></div>
+	<script>
+		// Agregamos un listener para el evento "submit" del formulario
+		document.getElementById('formulario').addEventListener('submit', function(event) {
+			event.preventDefault(); // Detenemos el envío del formulario
+			// Enviamos los datos del formulario a través de una petición AJAX
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', "{{ url_for('recibe_datos') }}");
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xhr.onload = function() {
+				// Mostramos la respuesta obtenida en la página
+				document.getElementById('respuesta').textContent = 'El resultado de sumar ' + JSON.parse(xhr.responseText).a + ' y ' + JSON.parse(xhr.responseText).b + ' es ' + JSON.parse(xhr.responseText).resultado;
+			};
+			xhr.send('valor_a=' + document.getElementById('valor_a').value + '&valor_b=' + document.getElementById('valor_b').value);
+		});
+	</script>
+</body>
+</html>
